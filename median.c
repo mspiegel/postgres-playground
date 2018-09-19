@@ -18,11 +18,18 @@ Datum
 median_transfn(PG_FUNCTION_ARGS)
 {
     MemoryContext agg_context;
+    bytea	   *state = (PG_ARGISNULL(0) ? NULL : PG_GETARG_BYTEA_P(0));
 
     if (!AggCheckCallContext(fcinfo, &agg_context))
         elog(ERROR, "median_transfn called in non-aggregate context");
 
-    PG_RETURN_NULL();
+	if (state == NULL)
+	{
+
+	}
+
+
+    PG_RETURN_BYTEA_P(state);
 }
 
 PG_FUNCTION_INFO_V1(median_finalfn);
