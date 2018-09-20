@@ -18,7 +18,7 @@ typedef struct MedianState
     Datum data[FLEXIBLE_ARRAY_MEMBER];
 } MedianState;
 
-#define MEDIAN_STATE_HEADER (VARHDRSZ + sizeof(Oid) + sizeof(int32))
+#define MEDIAN_STATE_HEADER (sizeof(MedianState))
 #define MEDIAN_STATE_CAPACITY(state) ((VARSIZE(state) - MEDIAN_STATE_HEADER ) / sizeof(Datum))
 
 /*
@@ -44,7 +44,7 @@ median_transfn(PG_FUNCTION_ARGS)
 
 	if (state == NULL)
 	{
-		Size arrsize = sizeof(Datum) * 200000;
+		Size arrsize = sizeof(Datum) * 8;
 		state = MemoryContextAllocZero(agg_context, MEDIAN_STATE_HEADER + arrsize);
 		SET_VARSIZE(state, MEDIAN_STATE_HEADER + arrsize);
         ((MedianState*) state)->type_oid = get_fn_expr_argtype(fcinfo->flinfo, 1);
