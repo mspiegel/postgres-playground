@@ -56,11 +56,8 @@ median_transfn(PG_FUNCTION_ARGS)
     {
         Size oldsize = sizeof(Datum) * median_state->len;
 		Size newsize = oldsize * 2;
-		bytea *newstate = MemoryContextAllocZero(agg_context, MEDIAN_STATE_HEADER + newsize);
-        memcpy(newstate, state, MEDIAN_STATE_HEADER + oldsize);
-        // pfree(state);
-		SET_VARSIZE(newstate, MEDIAN_STATE_HEADER + newsize);
-        state = newstate;
+        state = repalloc(state, MEDIAN_STATE_HEADER + newsize);
+		SET_VARSIZE(state, MEDIAN_STATE_HEADER + newsize);
         median_state = (MedianState*) state;
     }
 
