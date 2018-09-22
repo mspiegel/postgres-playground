@@ -73,10 +73,12 @@ boolean_func(Datum left, Datum right, FmgrInfo * finfo, Oid fncollation)
 }
 
 int32
-median2_partition(Datum arr[], int32 left, int32 right, FmgrInfo * finfo, Oid fncollation)
-{
-	Datum		val = arr[right];
-	int32		i = left;
+median2_partition(Datum arr[], int32 left, int32 right, FmgrInfo * finfo, Oid fncollation) {
+	Datum		val;
+	int32		i;
+	median2_swap(&arr[left + (right - left) / 2], &arr[right]);
+	val = arr[right];
+	i = left;
 	for (int32 j = left; j <= right - 1; j++) {
 		if (boolean_func(arr[j], val, finfo, fncollation)) {
 			median2_swap(&arr[i], &arr[j]);
@@ -88,8 +90,7 @@ median2_partition(Datum arr[], int32 left, int32 right, FmgrInfo * finfo, Oid fn
 }
 
 Datum
-quickselect(Datum arr[], int32 left, int32 right, int32 k, FmgrInfo * finfo, Oid fncollation)
-{
+quickselect(Datum arr[], int32 left, int32 right, int32 k, FmgrInfo * finfo, Oid fncollation) {
 	if (k > 0 && k <= right - left + 1) {
 
 		int32		index = median2_partition(arr, left, right, finfo, fncollation);
