@@ -69,6 +69,7 @@ median_transfn(PG_FUNCTION_ARGS)
 
 int cmp_datums(const void *p1, const void *p2, void *context)
 {
+    // TODO: replace calls to "<" and "=" with a single call to compare() function
     SortInfo *sort_info = (SortInfo*) context;
     Datum left = *((Datum*) p1);
     Datum right = *((Datum*) p2);
