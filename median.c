@@ -4,22 +4,22 @@
 #include <nodes/value.h>
 #include <utils/lsyscache.h>
 
+#include "median.h"
+
 #ifdef PG_MODULE_MAGIC
 PG_MODULE_MAGIC;
 #endif
 
-PG_FUNCTION_INFO_V1(median_transfn);
-
-typedef struct MedianState
+typedef struct SortInfo
 {
-    int32 cap;
-    Oid type_oid;
-    int32 len;
-    Datum data[FLEXIBLE_ARRAY_MEMBER];
-} MedianState;
+    FmgrInfo lt, eq;
+	Oid			fncollation;
+} SortInfo;
 
-#define MEDIAN_STATE_HEADER (sizeof(MedianState))
-#define MEDIAN_STATE_CAPACITY(state) ((VARSIZE(state) - MEDIAN_STATE_HEADER ) / sizeof(Datum))
+int cmp_datums(const void *p1, const void *p2, void *context);
+
+PG_FUNCTION_INFO_V1(median_transfn);
+PG_FUNCTION_INFO_V1(median_finalfn);
 
 /*
  * Median state transfer function.
@@ -67,14 +67,6 @@ median_transfn(PG_FUNCTION_ARGS)
     PG_RETURN_BYTEA_P(state);
 }
 
-typedef struct SortInfo
-{
-    FmgrInfo lt, eq;
-	Oid			fncollation;
-} SortInfo;
-
-int cmp_datums(const void *p1, const void *p2, void *context);
-
 int cmp_datums(const void *p1, const void *p2, void *context)
 {
     SortInfo *sort_info = (SortInfo*) context;
@@ -92,8 +84,6 @@ int cmp_datums(const void *p1, const void *p2, void *context)
 
     return 1;
 }
-
-PG_FUNCTION_INFO_V1(median_finalfn);
 
 /*
  * Median final function.

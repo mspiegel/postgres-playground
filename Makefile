@@ -3,7 +3,7 @@ EXTENSION = median
 DATA = median--1.0.sql
 DOCS = README.md
 EXTRA_CLEAN = *~ median.tar.gz
-REGRESS := median
+REGRESS := median median2
 PG_USER = postgres
 REGRESS_OPTS := \
 	--load-extension=$(EXTENSION) \
@@ -11,7 +11,7 @@ REGRESS_OPTS := \
 	--inputdir=test \
 	--outputdir=test \
 
-SRCS = median.c heap.c
+SRCS = median.c median2.c heap.c
 OBJS = $(patsubst %.c,%.o,$(SRCS))
 
 PG_CONFIG = pg_config
