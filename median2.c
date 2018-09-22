@@ -144,7 +144,7 @@ median2_finalfn(PG_FUNCTION_ARGS) {
 	fmgr_info_cxt(lte_regproc, &lte_finfo, fcinfo->flinfo->fn_mcxt);
 
 //TODO:	return the arithmetic mean of neighbors when even number of elements
-		median = quickselect(median_state->data, 0, median_state->len, median_state->len / 2, &lte_finfo, fcinfo->fncollation);
+		median = quickselect(median_state->data, 0, median_state->len - 1, median_state->len / 2 + 1, &lte_finfo, fcinfo->fncollation);
 
 	PG_RETURN_DATUM(median);
 }

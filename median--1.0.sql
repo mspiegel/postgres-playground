@@ -19,12 +19,12 @@ CREATE AGGREGATE median (ANYELEMENT)
 
 CREATE OR REPLACE FUNCTION _median2_transfn(state internal, val anyelement)
 RETURNS internal
-AS 'MODULE_PATHNAME', 'median_transfn'
+AS 'MODULE_PATHNAME', 'median2_transfn'
 LANGUAGE C IMMUTABLE;
 
 CREATE OR REPLACE FUNCTION _median2_finalfn(state internal, val anyelement)
 RETURNS anyelement
-AS 'MODULE_PATHNAME', 'median_finalfn'
+AS 'MODULE_PATHNAME', 'median2_finalfn'
 LANGUAGE C IMMUTABLE;
 
 DROP AGGREGATE IF EXISTS median2 (ANYELEMENT);
